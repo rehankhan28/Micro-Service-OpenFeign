@@ -17,12 +17,8 @@ import net.javaguides.employeeservice.service.EmployeeService;
 public class EmployeeServiceImpl implements EmployeeService {
 	@Autowired
 	private EmployeeRepository employeeRepository;
-//	@Autowired
-//	private RestTemplate restTemplate;
 	@Autowired
 	private WebClient webClient;
-//	@Autowired
-//	private APIClient apiClient;
 
 	@Override
 	public EmployeeDto saveEmployee(EmployeeDto employeeDto) {
@@ -37,15 +33,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public APIResponseDto getEmployeeById(Long employeeId) {
 		Employee employee = employeeRepository.findById(employeeId).get();
-//		ResponseEntity<DepartmentDto> responseEntity = restTemplate.getForEntity(
-//				"http://localhost:8080/api/departments/" + employee.getDepartmentCode(), DepartmentDto.class);
-//		DepartmentDto departmentDto = responseEntity.getBody();
 		DepartmentDto departmentDto = webClient.get()
 				.uri("http://localhost:8080/api/departments/" + employee.getDepartmentCode()).retrieve()
 				.bodyToMono(DepartmentDto.class).block();
-
-		// Open Feign Client
-//		DepartmentDto departmentDto = apiClient.getDepartment(employee.getDepartmentCode());
 		EmployeeDto employeeDto = new EmployeeDto(employee.getId(), employee.getFirstName(), employee.getLastName(),
 				employee.getEmail(), employee.getDepartmentCode());
 
